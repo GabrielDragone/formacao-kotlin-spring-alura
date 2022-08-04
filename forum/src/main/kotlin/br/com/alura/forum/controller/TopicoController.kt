@@ -23,4 +23,9 @@ class TopicoController(val service: TopicoService) {
         return service.buscarPorId(id)
     }
 
+    @GetMapping("/teste/{nome}") // Simulação de erro de parâmetro não encontrado MissingPathVariableException, pois na URI está nome e no parametro está name:
+    fun buscarPorNome(@PathVariable name: String): String {
+        return name
+    }
+
 }
