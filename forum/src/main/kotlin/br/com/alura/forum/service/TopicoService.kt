@@ -1,8 +1,10 @@
 package br.com.alura.forum.service
 
-import br.com.alura.forum.dto.NovoTopicoDto
+import br.com.alura.forum.dto.NovoTopicoForm
+import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.model.Topico
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service // Spring, essa é uma classe que representa Serviço. Dessa forma, conseguimos Injetar essa classe em qualquer outra classe
 // que também é gerenciada pelo Spring. Dai no nosso Controller, colocamos essa Service dentro do Construtor da mesma para que
@@ -67,17 +69,41 @@ class TopicoService(
         topicos = Arrays.asList(topico1, topico2, topico3) // Mandamos de volta 3 vezes o mesmo tópico.
     }*/
 
-    fun listar(): List<Topico> {
+    fun listarOld(): List<Topico> {
         return topicos
     }
 
-    fun buscarPorId(id: Long): Topico {
+    fun listar(): List<TopicoView> {
+        return topicos.stream().map { t -> TopicoView( // Para cada registro do tipo Topico da lista, quero mapear ela e transforma-la no tipo TopicoView.
+            id = t.id,
+            titulo = t.titulo,
+            mensagem = t.mensagem,
+            dataCriacao = t.dataCriacao,
+            status = t.status
+        ) }.collect(Collectors.toList()) // No final convertemos para uma Lista.
+    }
+
+    fun buscarPorIdOld(id: Long): Topico {
         return topicos.stream().filter( { // API de stream
                 t -> t.id == id           // Cada t é igual a um Topico, pesquisando por ID
         }).findFirst().get()              // Pega o primeiro e retorna
     }
 
-    fun cadastrar(dto: NovoTopicoDto) {
+    fun buscarPorId(id: Long): TopicoView {
+        val topico = topicos.stream().filter { t ->
+            t.id == id
+        }.findFirst().get()
+
+        return TopicoView(
+            id = topico.id,
+            titulo = topico.titulo,
+            mensagem = topico.mensagem,
+            dataCriacao = topico.dataCriacao,
+            status = topico.status
+        )
+    }
+
+    fun cadastrar(dto: NovoTopicoForm) {
         val topico = Topico(
             id = topicos.size.toLong() + 1,
             titulo = dto.titulo,
