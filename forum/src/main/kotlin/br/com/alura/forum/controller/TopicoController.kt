@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 // @Controller: Usamos quando estamos trabalhando numa aplicação server-side, onde as páginas são geradas através de JSP, time leaf, etc (renderização).
 @RestController // É uma classe controller, só que é RestController, irei apenas receber dados e devolver dados.
@@ -27,9 +28,12 @@ class TopicoController(val service: TopicoService) {
     }
 
     @PostMapping
-    fun cadastrar(@RequestBody dto: NovoTopicoForm) { // RequestBody serve pra informar ao Spring que as informações desse POST estarão no Corpo da Requisição.
+    fun cadastrar(@RequestBody @Valid dto: NovoTopicoForm) {
+        // @RequestBody serve pra informar ao Spring que as informações desse POST estarão no Corpo da Requisição.
         // Além disso, lá no postman, dentro de Headers, precisamos informar o Content-Type: application/json para informar ao servidor o formato do conteudo da requisição que estamos enviando.
         // Em Body, selecionamos a opção raw.
+        // @Valid: Informamos ao Spring que queremos que ele valide o NovoTopicoForm com as bean validations que colocamos em seus campos.
+        // Se houver alguma violação, o Spring vai retornar o erro 400 de bad request.
         service.cadastrar(dto)
     }
 
