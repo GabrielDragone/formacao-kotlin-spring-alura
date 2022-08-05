@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TopicoFormMapper(
-    private val  cursoService: CursoService, // Constructor Injection
+    private val cursoService: CursoService, // Constructor Injection
     private val usuarioService: UsuarioService,
 ): Mapper<NovoTopicoForm, Topico> { // TopicoFormMapper implementa interface Mapper.
 
