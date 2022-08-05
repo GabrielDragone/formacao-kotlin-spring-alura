@@ -2,6 +2,8 @@ package br.com.alura.forum.service
 
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
+import br.com.alura.forum.mapper.TopicoFormMapper
+import br.com.alura.forum.mapper.TopicoViewMapper
 import br.com.alura.forum.model.Topico
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
@@ -12,8 +14,10 @@ import java.util.stream.Collectors
 class TopicoService(
     //private var topicos: List<Topico>, // Forma antiga para usar junto com o init, porém, o add não vai funfar pq toda vez que a classe é chamada resetaria.
     private var topicos: List<Topico> = ArrayList(),
-    private var cursoService: CursoService,
-    private var usuarioService: UsuarioService
+    //private val  cursoService: CursoService, // Retiramos daqui e inserimos no TopicoFormMapper
+    //private val usuarioService: UsuarioService,
+    private val topicoViewMapper: TopicoViewMapper,
+    private val topicoFormMapper: TopicoFormMapper
     ) {
 
     // Bloco de inicialização da classe:
@@ -74,13 +78,9 @@ class TopicoService(
     }
 
     fun listar(): List<TopicoView> {
-        return topicos.stream().map { t -> TopicoView( // Para cada registro do tipo Topico da lista, quero mapear ela e transforma-la no tipo TopicoView.
-            id = t.id,
-            titulo = t.titulo,
-            mensagem = t.mensagem,
-            dataCriacao = t.dataCriacao,
-            status = t.status
-        ) }.collect(Collectors.toList()) // No final convertemos para uma Lista.
+        return topicos.stream().map {
+                t ->  topicoViewMapper.map(t) // Toda a implementação que está dentro do return do map estava aqui antigamente
+        }.collect(Collectors.toList()) // No final convertemos para uma Lista.
     }
 
     fun buscarPorIdOld(id: Long): Topico {
@@ -94,23 +94,12 @@ class TopicoService(
             t.id == id
         }.findFirst().get()
 
-        return TopicoView(
-            id = topico.id,
-            titulo = topico.titulo,
-            mensagem = topico.mensagem,
-            dataCriacao = topico.dataCriacao,
-            status = topico.status
-        )
+        return topicoViewMapper.map(topico) // Toda a implementação que está dentro do return do map estava aqui antigamente
     }
 
-    fun cadastrar(dto: NovoTopicoForm) {
-        val topico = Topico(
-            id = topicos.size.toLong() + 1,
-            titulo = dto.titulo,
-            mensagem = dto.mensagem,
-            curso = cursoService.buscarPorId(dto.idCurso),
-            autor = usuarioService.buscarPorId(dto.idAutor)
-        )
+    fun cadastrar(form: NovoTopicoForm) {
+        val topico = topicoFormMapper.map(form)
+        topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico) // O list.plus(objeto) é equivalente ao list.add(objeto) do Java. Ele vai adicionar um elemento em uma lista. É necessário fazer o topicos = pois a lista é imutavel.
     }
 

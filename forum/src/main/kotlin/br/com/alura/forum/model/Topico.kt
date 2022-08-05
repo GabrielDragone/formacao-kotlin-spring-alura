@@ -4,8 +4,8 @@ import br.com.alura.forum.enum.StatusTopico
 import java.time.LocalDateTime
 
 data class Topico (
-    val id: Long? = null, // ? retorna null em caso de falha de conversão.
-    val titulo: String,
+    var id: Long? = null, // ? retorna null em caso de falha de conversão. var é variavel, ou seja, muda, ava???
+    val titulo: String, // val é constante, ou seja, esse valor nunca vai mudar
     val mensagem: String,
     val dataCriacao: LocalDateTime = LocalDateTime.now(), // No momento da criação já pega a data.
     val curso: Curso,
