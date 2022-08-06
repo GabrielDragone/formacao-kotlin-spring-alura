@@ -98,30 +98,31 @@ class TopicoService(
         return topicoViewMapper.map(topico) // Toda a implementação que está dentro do return do map estava aqui antigamente
     }
 
-    fun cadastrar(form: NovoTopicoForm) {
+    fun cadastrar(form: NovoTopicoForm): TopicoView {
         val topico = topicoFormMapper.map(form)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico) // O list.plus(objeto) é equivalente ao list.add(objeto) do Java. Ele vai adicionar um elemento em uma lista. É necessário fazer o topicos = pois a lista é imutavel.
+        return topicoViewMapper.map(topico)
     }
 
-    fun atualizar(form: AtualizacaoTopicoForm) {
+    fun atualizar(form: AtualizacaoTopicoForm): TopicoView {
         val topico = buscarPorIdOld(form.id)
+        val topicoAtualizado = Topico(
+            id = form.id,
+            titulo = form.titulo,
+            mensagem = form.mensagem,
+            dataCriacao = topico.dataCriacao,
+            curso = topico.curso,
+            autor = topico.autor,
+            status = topico.status,
+            resposta = topico.resposta
+        )
 
-        topicos = topicos   // Temos que fazer dessa forma pq a lista é imutável.
-            .minus(topico)  // lista.minus(objeto): Remove o tópico.
-            .plus(          // Adiciona o novo tópico enviado novamente, utilizando dados do form e do topico antigo.
-                Topico(
-                    id = form.id,
-                    titulo = form.titulo,
-                    mensagem = form.mensagem,
-                    dataCriacao = topico.dataCriacao,
-                    curso = topico.curso,
-                    autor = topico.autor,
-                    status = topico.status,
-                    resposta = topico.resposta
-                )
-            )
+        topicos = topicos               // Temos que fazer dessa forma pq a lista é imutável.
+            .minus(topico)              // lista.minus(objeto): Remove o tópico.
+            .plus(topicoAtualizado)     // Adiciona o novo tópico enviado novamente, utilizando dados do form e do topico antigo.
 
+        return topicoViewMapper.map(topicoAtualizado)
     }
 
     fun deletar(id: Long) {
