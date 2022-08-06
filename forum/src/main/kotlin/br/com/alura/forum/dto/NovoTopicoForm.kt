@@ -21,6 +21,6 @@ data class NovoTopicoForm( // Construtor
     val idCurso: Long,
 
     @field:NotNull
-    @field:PositiveOrZero // Só pode de 0 para cima (0, 1, 2, 3...)
+    @field:Positive // Só pode de 0 ou 1
     val idAutor: Long
 )

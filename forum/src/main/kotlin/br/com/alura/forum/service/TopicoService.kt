@@ -1,5 +1,6 @@
 package br.com.alura.forum.service
 
+import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.mapper.TopicoFormMapper
@@ -101,6 +102,26 @@ class TopicoService(
         val topico = topicoFormMapper.map(form)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico) // O list.plus(objeto) é equivalente ao list.add(objeto) do Java. Ele vai adicionar um elemento em uma lista. É necessário fazer o topicos = pois a lista é imutavel.
+    }
+
+    fun atualizar(form: AtualizacaoTopicoForm) {
+        val topico = buscarPorIdOld(form.id)
+
+        topicos = topicos   // Temos que fazer dessa forma pq a lista é imutável.
+            .minus(topico)  // lista.minus(objeto): Remove o tópico.
+            .plus(          // Adiciona o novo tópico enviado novamente, utilizando dados do form e do topico antigo.
+                Topico(
+                    id = form.id,
+                    titulo = form.titulo,
+                    mensagem = form.mensagem,
+                    dataCriacao = topico.dataCriacao,
+                    curso = topico.curso,
+                    autor = topico.autor,
+                    status = topico.status,
+                    resposta = topico.resposta
+                )
+            )
+
     }
 
 }
