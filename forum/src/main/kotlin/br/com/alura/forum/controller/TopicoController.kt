@@ -4,6 +4,7 @@ import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,6 +43,11 @@ class TopicoController(val service: TopicoService) {
     @PutMapping // Se vier uma requisição do tipo PUT, significa que queremos atualizar um determinado registro.
     fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm) {
         service.atualizar(form)
+    }
+
+    @DeleteMapping("/{id}") // Verbo Delete, quando queremos remover determinado registro.
+    fun deletar(@PathVariable id: Long) {
+        service.deletar(id)
     }
 
     @GetMapping("/teste/{nome}") // Simulação de erro de parâmetro não encontrado MissingPathVariableException, pois na URI está nome e no parametro está name:

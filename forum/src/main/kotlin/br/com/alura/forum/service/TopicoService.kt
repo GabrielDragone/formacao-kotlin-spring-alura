@@ -124,4 +124,9 @@ class TopicoService(
 
     }
 
+    fun deletar(id: Long) {
+        val topico = buscarPorIdOld(id)
+        topicos = topicos.minus(topico)
+    }
+
 }
