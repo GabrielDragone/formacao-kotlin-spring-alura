@@ -1,5 +1,6 @@
 package br.com.alura.forum.service
 
+import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.model.Usuario
 import org.springframework.stereotype.Service
 import java.util.*
@@ -20,7 +21,7 @@ class UsuarioService(private var usuarios: List<Usuario>) {
     fun buscarPorId(id: Long): Usuario {
         return usuarios.stream().filter(
             { u -> u.id == id }
-        ).findFirst().get()
+        ).findFirst().orElseThrow { NotFoundException("Usuário não encontrado!") }
     }
 
 }

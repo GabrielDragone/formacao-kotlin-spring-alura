@@ -3,6 +3,7 @@ package br.com.alura.forum.service
 import br.com.alura.forum.dto.AtualizacaoRespostaForm
 import br.com.alura.forum.dto.NovaRespostaForm
 import br.com.alura.forum.dto.RespostaView
+import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.RespostaFormMapper
 import br.com.alura.forum.mapper.RespostaViewMapper
 import br.com.alura.forum.model.Curso
@@ -11,8 +12,6 @@ import br.com.alura.forum.model.Topico
 import br.com.alura.forum.model.Usuario
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.function.Consumer
-import java.util.function.Predicate
 import java.util.stream.Collectors
 
 @Service
@@ -83,7 +82,7 @@ class RespostaService(
     }
 
     fun buscarRespostaPorId(idResposta: Long): Resposta {
-        val resposta = respostas.stream().filter { r -> r.id == idResposta }.findFirst().get()
+        val resposta = respostas.stream().filter { r -> r.id == idResposta }.findFirst().orElseThrow{ NotFoundException("Resposta não encontrada!") }
         return resposta
     }
 

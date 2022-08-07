@@ -10,17 +10,18 @@ import javax.validation.constraints.*
 // Mais info: https://www.baeldung.com/javax-validation
 data class NovoTopicoForm( // Construtor
     @field:NotEmpty // Bean Validation e Spring, validem esse campo, ele não pode ser enviado vazio "".
-    @field:Size(min = 5, max = 100) // ... ..., ... ..., ele deve ter o tamanho entre 5 e 100 caracteres
+    @field:Size(min = 5, max = 50, message = "O titulo deve ter entre 5 e 50 caracteres!") // ... ..., ... ..., ele deve ter o tamanho entre 5 e 100 caracteres
     val titulo: String,
 
-    @field:NotEmpty
+    @field:NotEmpty(message = "A mensagem deve estar preenchida!")
+    @field:Size(min = 5, max = 100, message = "A mensagem deve ter entre 5 e 100 caracteres!")
     val mensagem: String,
 
-    @field:NotNull // Ben Validation e Spring, validem esse campo, ele não pode ser null.
+    @field:NotNull(message = "O curso não pode ser nulo!") // Ben Validation e Spring, validem esse campo, ele não pode ser null.
     @field:Positive // Só pode acima de 0 (1, 2, 3, ...)
     val idCurso: Long,
 
-    @field:NotNull
+    @field:NotNull(message = "O autor não pode ser nulo!")
     @field:Positive // Só pode de 0 ou 1
     val idAutor: Long
 )

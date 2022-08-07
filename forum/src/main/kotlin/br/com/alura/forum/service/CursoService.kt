@@ -1,5 +1,6 @@
 package br.com.alura.forum.service
 
+import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.model.Curso
 import org.springframework.stereotype.Service
 import java.util.*
@@ -20,7 +21,7 @@ class CursoService(private var cursos: List<Curso>) {
     fun buscarPorId(id: Long): Curso {
         return cursos.stream().filter(
             { c -> c.id == id }
-        ).findFirst().get()
+        ).findFirst().orElseThrow { NotFoundException("Curso não encontrado!") }
     }
 
 }
