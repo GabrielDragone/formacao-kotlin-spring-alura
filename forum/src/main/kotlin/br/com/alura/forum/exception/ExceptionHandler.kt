@@ -25,6 +25,20 @@ class ExceptionHandler {
         )
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(Exception::class) // Quando ocorrer uma Exception Genérica (qualquer tipo), vai cair nesse cara:
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleServerError(
+        exception: Exception,
+        request: HttpServletRequest
+    ): ErrorView {
+        return ErrorView(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            error = HttpStatus.INTERNAL_SERVER_ERROR.name,
+            message = exception.message,
+            path = request.servletPath
+        )
+    }
+
     fun outraException() {
         //TODO implements
     }
