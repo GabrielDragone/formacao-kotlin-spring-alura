@@ -7,6 +7,7 @@ import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.TopicoFormMapper
 import br.com.alura.forum.mapper.TopicoViewMapper
 import br.com.alura.forum.model.Topico
+import br.com.alura.forum.repository.TopicoRepository
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -15,7 +16,8 @@ import java.util.stream.Collectors
 // o Spring saiba que quando ele for instanciar a Controller a Service depende dela.
 class TopicoService(
     //private var topicos: List<Topico>, // Forma antiga para usar junto com o init, porém, o add não vai funfar pq toda vez que a classe é chamada resetaria.
-    private var topicos: List<Topico> = ArrayList(),
+    //private var topicos: List<Topico> = ArrayList(), // Retirado pois agora passamos a utilizar o banco H2 através do TopicoRepository
+    private val topicoRepository: TopicoRepository,
     //private val  cursoService: CursoService, // Retiramos daqui e inserimos no TopicoFormMapper
     //private val usuarioService: UsuarioService,
     private val topicoViewMapper: TopicoViewMapper,
@@ -77,40 +79,54 @@ class TopicoService(
     }*/
 
     fun listarOld(): List<Topico> {
-        return topicos
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //return topicos
+        return topicoRepository.findAll()
     }
 
     fun listar(): List<TopicoView> {
-        return topicos.stream().map {
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //return topicos.stream().map {
+        return topicoRepository.findAll().stream().map {
                 t ->  topicoViewMapper.map(t) // Toda a implementação que está dentro do return do map estava aqui antigamente
         }.collect(Collectors.toList()) // No final convertemos para uma Lista.
     }
 
     fun buscarPorIdOld(id: Long): Topico {
-        return topicos.stream().filter( { // API de stream
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //return topicos.stream().filter( { // API de stream
+        return topicoRepository.findAll().stream().filter( { // API de stream
                 t -> t.id == id           // Cada t é igual a um Topico, pesquisando por ID
 //        }).findFirst().get()              // Pega o primeiro e retorna
         }).findFirst().orElseThrow { NotFoundException(message = notFoundMessage) }            // Pega o primeiro e retorna
     }
 
     fun buscarPorId(id: Long): TopicoView {
-        val topico = topicos.stream().filter { t ->
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        /*val topico = topicos.stream().filter { t ->
             t.id == id
-        }.findFirst().get()
+        }.findFirst().get()*/
+        val topico = topicoRepository.findById(id).orElseThrow { NotFoundException(message = notFoundMessage) } // Repositório, busque por ID, se não encontrar, retorna o Optional com Exception.
 
         return topicoViewMapper.map(topico) // Toda a implementação que está dentro do return do map estava aqui antigamente
     }
 
     fun cadastrar(form: NovoTopicoForm): TopicoView {
         val topico = topicoFormMapper.map(form)
-        topico.id = topicos.size.toLong() + 1
-        topicos = topicos.plus(topico) // O list.plus(objeto) é equivalente ao list.add(objeto) do Java. Ele vai adicionar um elemento em uma lista. É necessário fazer o topicos = pois a lista é imutavel.
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //topico.id = topicos.size.toLong() + 1
+        //topicos = topicos.plus(topico) // O list.plus(objeto) é equivalente ao list.add(objeto) do Java. Ele vai adicionar um elemento em uma lista. É necessário fazer o topicos = pois a lista é imutavel.
+        topicoRepository.save(topico)
         return topicoViewMapper.map(topico)
     }
 
     fun atualizar(form: AtualizacaoTopicoForm): TopicoView {
-        val topico = buscarPorIdOld(form.id)
-        val topicoAtualizado = Topico(
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //val topico = buscarPorIdOld(form.id)
+        val topico = topicoRepository.findById(form.id).orElseThrow { NotFoundException(message = notFoundMessage) }
+
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        /*val topicoAtualizado = Topico(
             id = form.id,
             titulo = form.titulo,
             mensagem = form.mensagem,
@@ -119,18 +135,28 @@ class TopicoService(
             autor = topico.autor,
             status = topico.status,
             resposta = topico.resposta
-        )
+        )*/
 
-        topicos = topicos               // Temos que fazer dessa forma pq a lista é imutável.
+        topico.titulo = form.titulo
+        topico.mensagem = form.mensagem
+
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        /*topicos = topicos               // Temos que fazer dessa forma pq a lista é imutável.
             .minus(topico)              // lista.minus(objeto): Remove o tópico.
             .plus(topicoAtualizado)     // Adiciona o novo tópico enviado novamente, utilizando dados do form e do topico antigo.
+        */
+        topicoRepository.save(topico)
 
-        return topicoViewMapper.map(topicoAtualizado)
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        //return topicoViewMapper.map(topico)
+        return topicoViewMapper.map(topico)
     }
 
     fun deletar(id: Long) {
-        val topico = buscarPorIdOld(id)
-        topicos = topicos.minus(topico)
+        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+        /*val topico = buscarPorIdOld(id)
+        topicos = topicos.minus(topico)*/
+        topicoRepository.deleteById(id)
     }
 
 }

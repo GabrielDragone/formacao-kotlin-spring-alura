@@ -6,6 +6,7 @@ import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -35,6 +36,7 @@ class TopicoController(val service: TopicoService) {
     }
 
     @PostMapping // Utilizamos POST quando queremos cadastrar algo.
+    @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
     fun cadastrar(
         @RequestBody @Valid form: NovoTopicoForm,
         uriComponentsBuilder: UriComponentsBuilder // Classe do Spring que auxilia na criação da URI. Já vai puxar sozinho o endereço do servidor.
@@ -50,6 +52,7 @@ class TopicoController(val service: TopicoService) {
     }
 
     @PutMapping // Se vier uma requisição do tipo PUT, significa que queremos atualizar um determinado registro.
+    @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
     fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm): ResponseEntity<TopicoView> {
         val topicoView = service.atualizar(form)
         return ResponseEntity.ok(topicoView) // Retorna status 200 (ok), junto com o dado atualizado para visualização no Body.
@@ -57,6 +60,7 @@ class TopicoController(val service: TopicoService) {
 
     @DeleteMapping("/{id}") // Verbo Delete, quando queremos remover determinado registro.
     @ResponseStatus(HttpStatus.NO_CONTENT) // Se a requisição for processada com sucesso, não teremos nenhum dado de retorno, então retornaremos o Status 204 (No Content)
+    @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
     fun deletar(@PathVariable id: Long) {
         service.deletar(id)
     }
