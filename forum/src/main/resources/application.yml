@@ -10,5 +10,5 @@ spring:
       hibernate: # Configurações:
         show_sql: true # Imprime a query no console
         format_sql: true # Formata o comando
-    defer-datasource-initialization: true # Pra funcionar a inicialização do projeto e o Spring entender que tem que ler o arquivo e evitar o erro de JdbcSQLSyntaxErrorException: Table "CURSO" not found (https://stackoverflow.com/questions/67695069/spring-boot-datasource-initialization-error-with-data-sql-script-after-2-5-0-upg)
-
+    #defer-datasource-initialization: true # Pra funcionar a inicialização do projeto e o Spring entender que tem que ler o arquivo e evitar o erro de JdbcSQLSyntaxErrorException: Table "CURSO" not found (https://stackoverflow.com/questions/67695069/spring-boot-datasource-initialization-error-with-data-sql-script-after-2-5-0-upg)
+    # comentei acima pois após inserir o flyway, estava dando erro de inicialização da aplicação.
