@@ -1,6 +1,8 @@
 package br.com.alura.forum.repository
 
 import br.com.alura.forum.model.Topico
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 // Representa a ponte com o banco de dados.
@@ -13,6 +15,9 @@ interface TopicoRepository: JpaRepository<Topico, Long> {
     // O Spring Data vai reconhecer que queremos buscar os Topicos pelo atributo Nome dentro do Atributo Curso. Então
     // ele fará um SELECT com JOIN na tabela Curso com nome igual ao que foi passado no parâmetro. Para outros atributos,
     // basta seguir o mesmo padrão de nomenclatura.
-    fun findByCursoNome(nomeCurso: String): List<Topico>
+    //fun findByCursoNome(nomeCurso: String): List<Topico>
+    fun findByCursoNome(nomeCurso: String, pacinacao: Pageable): Page<Topico> // O Page, além de ter a lista, ele tem
+    // os dados da paginação. Que são importantes pro front, pois ele precisa saber qual página está, quantas páginas
+    // tem e quantos registros tem tbm. Todas essas informações tem dentro do Page.
 
 }

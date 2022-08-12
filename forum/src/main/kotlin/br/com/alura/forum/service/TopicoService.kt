@@ -8,6 +8,8 @@ import br.com.alura.forum.mapper.TopicoFormMapper
 import br.com.alura.forum.mapper.TopicoViewMapper
 import br.com.alura.forum.model.Topico
 import br.com.alura.forum.repository.TopicoRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -93,16 +95,27 @@ class TopicoService(
 //        }.collect(Collectors.toList()) // No final convertemos para uma Lista.
 //    }
 
-    fun listar(nomeCurso: String?): List<TopicoView> {
-        val topicos = if (nomeCurso == null) {
-            topicoRepository.findAll() // Se o nomeCurso não estiver preenchido, pega todos os cursos e retorna pra topicos.
+    fun listar(
+        nomeCurso: String?,
+        paginacao: Pageable
+//    ): List<TopicoView> {
+    ): Page<TopicoView> {
+        val topicos = if (nomeCurso == null) { // Se o nomeCurso não estiver preenchido, pega todos os cursos e retorna pra topicos.
+            topicoRepository.findAll(paginacao) // O findAll tem a implementação com e sem o Pageable e o próprio Spring sabe que deverá limitar a consulta limitando o retorno.
         } else {
-            topicoRepository.findByCursoNome(nomeCurso) // Se estiver, busca pelo nomeCurso passado e retorna para topicos.
+            //topicoRepository.findByCursoNome(nomeCurso) // Se estiver, busca pelo nomeCurso passado e retorna para topicos.
+            topicoRepository.findByCursoNome(nomeCurso, paginacao)
         }
 
-        return topicos.stream().map {
+        // Implementação de List:
+        /*return topicos.stream().map {
                 topico -> topicoViewMapper.map(topico)
-        }.collect(Collectors.toList())
+        }.collect(Collectors.toList())*/
+
+        // Implementação com Page:
+        return topicos.map {
+                topico -> topicoViewMapper.map(topico)
+        }
 
     }
 

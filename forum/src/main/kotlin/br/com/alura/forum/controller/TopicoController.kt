@@ -4,6 +4,10 @@ import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -28,8 +32,15 @@ class TopicoController(val service: TopicoService) {
 
     @GetMapping // Verbo GET com URI /topicos. Responsável por devolver dados.
 //    fun listar(): List<TopicoView> {
-    fun listar(@RequestParam(required = false) nomeCurso: String?): List<TopicoView> { // Busca por nomeCurso. Parâmetro não obrigatório. Se não vier, passará nulo.
-        return service.listar(nomeCurso)
+    fun listar(
+        @RequestParam(required = false) nomeCurso: String?, // Busca por nomeCurso. Parâmetro não obrigatório. Se não vier, passará nulo.
+        @PageableDefault(size = 5, sort = ["dataCriacao"], direction = Sort.Direction.DESC) paginacao: Pageable // O Spring sabe que esse parâmetro ele não vai receber do Cliente. Ele mesmo deve
+        // instanciar e passar pra ca. O cliente manda os dados para filtrar quantos registros quer, por exemplo. Parametro size = 5, ou page = 1.
+        // @PageableDefault, são os dados que, se não forem enviados na requisição, irão atender o Default.
+        // Inserindo o sort, informamos por qual atributo vai ordenar e o direction pra falar se é ASC ou DESC.
+//    ): List<TopicoView> {
+    ): Page<TopicoView> {
+        return service.listar(nomeCurso, paginacao)
     }
 
     @GetMapping("/{id}") // Parâmetro dinâmico, faz parte do path da URI
