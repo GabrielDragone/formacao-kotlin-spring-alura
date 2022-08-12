@@ -84,12 +84,26 @@ class TopicoService(
         return topicoRepository.findAll()
     }
 
-    fun listar(): List<TopicoView> {
-        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
-        //return topicos.stream().map {
-        return topicoRepository.findAll().stream().map {
-                t ->  topicoViewMapper.map(t) // Toda a implementação que está dentro do return do map estava aqui antigamente
-        }.collect(Collectors.toList()) // No final convertemos para uma Lista.
+    // Antigo antes de inserir o parâmetro não obrigatório:
+//    fun listar(): List<TopicoView> {
+//        // Alterado pois agora passamos a utilizar o banco H2 através do TopicoRepository:
+//        //return topicos.stream().map {
+//        return topicoRepository.findAll().stream().map {
+//                t ->  topicoViewMapper.map(t) // Toda a implementação que está dentro do return do map estava aqui antigamente
+//        }.collect(Collectors.toList()) // No final convertemos para uma Lista.
+//    }
+
+    fun listar(nomeCurso: String?): List<TopicoView> {
+        val topicos = if (nomeCurso == null) {
+            topicoRepository.findAll() // Se o nomeCurso não estiver preenchido, pega todos os cursos e retorna pra topicos.
+        } else {
+            topicoRepository.findByCursoNome(nomeCurso) // Se estiver, busca pelo nomeCurso passado e retorna para topicos.
+        }
+
+        return topicos.stream().map {
+                topico -> topicoViewMapper.map(topico)
+        }.collect(Collectors.toList())
+
     }
 
     fun buscarPorIdOld(id: Long): Topico {
