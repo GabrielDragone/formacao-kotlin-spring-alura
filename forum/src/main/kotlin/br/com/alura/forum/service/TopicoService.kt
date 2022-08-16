@@ -27,7 +27,7 @@ class TopicoService(
     private val topicoViewMapper: TopicoViewMapper,
     private val topicoFormMapper: TopicoFormMapper,
     private val notFoundMessage: String = "Tópico não encontrado!",
-    private val em: EntityManager
+    private val em: EntityManager // Caso precisemos utilizar o EM por alguma particularidade, podemos instancia-lo ou criar a implementação do DAO conforme antigamente.
     ) {
 
     // Bloco de inicialização da classe:
