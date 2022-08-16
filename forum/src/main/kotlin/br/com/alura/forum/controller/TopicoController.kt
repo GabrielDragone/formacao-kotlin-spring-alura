@@ -4,6 +4,8 @@ import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -32,6 +34,7 @@ class TopicoController(val service: TopicoService) {
 
     @GetMapping // Verbo GET com URI /topicos. Responsável por devolver dados.
 //    fun listar(): List<TopicoView> {
+    @Cacheable("topicos") // A primeira vez que for chamado, vai buscar normalmente. A partir da segunda, vai usar o Cache. "topicos" é a identificação.
     fun listar(
         @RequestParam(required = false) nomeCurso: String?, // Busca por nomeCurso. Parâmetro não obrigatório. Se não vier, passará nulo.
         @PageableDefault(size = 5, sort = ["dataCriacao"], direction = Sort.Direction.DESC) paginacao: Pageable // O Spring sabe que esse parâmetro ele não vai receber do Cliente. Ele mesmo deve
@@ -50,6 +53,7 @@ class TopicoController(val service: TopicoService) {
 
     @PostMapping // Utilizamos POST quando queremos cadastrar algo.
     @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
+    @CacheEvict(value = ["topicos"], allEntries = true) // Toda vez que chamar esse endpoint, serão limpados os Cache dos registros em array(nesse caso topicos)). O allEntries serve pra informar que queremos revomer todos os registros.
     fun cadastrar(
         @RequestBody @Valid form: NovoTopicoForm,
         uriComponentsBuilder: UriComponentsBuilder // Classe do Spring que auxilia na criação da URI. Já vai puxar sozinho o endereço do servidor.
@@ -66,6 +70,7 @@ class TopicoController(val service: TopicoService) {
 
     @PutMapping // Se vier uma requisição do tipo PUT, significa que queremos atualizar um determinado registro.
     @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
+    @CacheEvict(value = ["topicos"], allEntries = true) // Toda vez que chamar esse endpoint, serão limpados os Cache dos registros em array(nesse caso topicos)). O allEntries serve pra informar que queremos revomer todos os registros.
     fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm): ResponseEntity<TopicoView> {
         val topicoView = service.atualizar(form)
         return ResponseEntity.ok(topicoView) // Retorna status 200 (ok), junto com o dado atualizado para visualização no Body.
@@ -74,6 +79,7 @@ class TopicoController(val service: TopicoService) {
     @DeleteMapping("/{id}") // Verbo Delete, quando queremos remover determinado registro.
     @ResponseStatus(HttpStatus.NO_CONTENT) // Se a requisição for processada com sucesso, não teremos nenhum dado de retorno, então retornaremos o Status 204 (No Content)
     @Transactional // Contexto de transação, uma transação pra inicializar, rodar os comandos SQL e commitar as alterações.
+    @CacheEvict(value = ["topicos"], allEntries = true) // Toda vez que chamar esse endpoint, serão limpados os Cache dos registros em array(nesse caso topicos)). O allEntries serve pra informar que queremos revomer todos os registros.
     fun deletar(@PathVariable id: Long) {
         service.deletar(id)
     }
