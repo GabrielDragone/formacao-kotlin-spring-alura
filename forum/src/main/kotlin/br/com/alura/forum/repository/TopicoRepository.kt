@@ -29,5 +29,7 @@ interface TopicoRepository: JpaRepository<Topico, Long> {
             "FROM Topico t JOIN t.curso curso " +
             "GROUP BY curso.categoria")
     fun relatorio(): List<TopicoPorCategoriaDto>
+    @Query("select t from Topico t where t.respostas is empty")
+    fun pendentes(): List<Topico>
 
 }

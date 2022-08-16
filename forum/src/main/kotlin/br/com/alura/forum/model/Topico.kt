@@ -20,5 +20,5 @@ data class Topico (
     var status: StatusTopico = StatusTopico.NAO_RESPONDIDO, // Enum, qnd criar já cria como não respondido.
     @OneToMany(mappedBy = "topico") // Um Tópico pode ter várias respostas. Como na classe Resposta tbm tem o mapeamento
     // de Topico, precisamos fazer o relacionamento bidirecional e informar o nome do atributo na classe Resposta.
-    val resposta: List<Resposta> = ArrayList()
+    val respostas: List<Resposta> = ArrayList()
 )

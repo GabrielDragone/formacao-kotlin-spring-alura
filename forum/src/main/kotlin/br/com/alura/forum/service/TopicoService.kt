@@ -195,4 +195,8 @@ class TopicoService(
         return topicoRepository.relatorio()
     }
 
+    fun pendentes(): List<Topico> {
+        return topicoRepository.pendentes()
+    }
+
 }
