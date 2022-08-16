@@ -2,6 +2,7 @@ package br.com.alura.forum.service
 
 import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
+import br.com.alura.forum.dto.TopicoPorCategoriaDto
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.TopicoFormMapper
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
+import javax.persistence.EntityManager
 
 @Service // Spring, essa é uma classe que representa Serviço. Dessa forma, conseguimos Injetar essa classe em qualquer outra classe
 // que também é gerenciada pelo Spring. Dai no nosso Controller, colocamos essa Service dentro do Construtor da mesma para que
@@ -24,7 +26,8 @@ class TopicoService(
     //private val usuarioService: UsuarioService,
     private val topicoViewMapper: TopicoViewMapper,
     private val topicoFormMapper: TopicoFormMapper,
-    private val notFoundMessage: String = "Tópico não encontrado!"
+    private val notFoundMessage: String = "Tópico não encontrado!",
+    private val em: EntityManager
     ) {
 
     // Bloco de inicialização da classe:
@@ -100,6 +103,8 @@ class TopicoService(
         paginacao: Pageable
 //    ): List<TopicoView> {
     ): Page<TopicoView> {
+        println("EntityManager: ")
+        println(em)
         val topicos = if (nomeCurso == null) { // Se o nomeCurso não estiver preenchido, pega todos os cursos e retorna pra topicos.
             topicoRepository.findAll(paginacao) // O findAll tem a implementação com e sem o Pageable e o próprio Spring sabe que deverá limitar a consulta limitando o retorno.
         } else {
@@ -184,6 +189,10 @@ class TopicoService(
         /*val topico = buscarPorIdOld(id)
         topicos = topicos.minus(topico)*/
         topicoRepository.deleteById(id)
+    }
+
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return topicoRepository.relatorio()
     }
 
 }

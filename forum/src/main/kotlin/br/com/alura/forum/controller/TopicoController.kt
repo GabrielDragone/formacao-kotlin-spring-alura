@@ -2,6 +2,7 @@ package br.com.alura.forum.controller
 
 import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
+import br.com.alura.forum.dto.TopicoPorCategoriaDto
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
 import org.springframework.cache.annotation.CacheEvict
@@ -87,6 +88,11 @@ class TopicoController(val service: TopicoService) {
     @GetMapping("/teste/{nome}") // Simulação de erro de parâmetro não encontrado MissingPathVariableException, pois na URI está nome e no parametro está name:
     fun buscarPorNome(@PathVariable name: String): String {
         return name
+    }
+
+    @GetMapping("/relatorio")
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return service.relatorio()
     }
 
 }
