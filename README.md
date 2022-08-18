@@ -28,4 +28,4 @@ O primeiro passo será a criação do projeto e implementação das funcionalida
   * Configuração para acesso de banco via console no Navegador.
   * Acessar diretamente o EntityManager.
 * APIs com Kotlin e Spring Data REST:
-  * Abrir projeto spring-data-rest-example para verificar as anotações (README.md) e exemplos de implementação.
+  * Abrir projeto spring-data-rest-example para verificar as anotações (README.md) e exemplos de implementação dentro do projeto.
