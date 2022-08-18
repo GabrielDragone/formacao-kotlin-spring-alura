@@ -16,3 +16,16 @@ O primeiro passo será a criação do projeto e implementação das funcionalida
   * Boas práticas do REST utilizando ResponseEntity e ResponseStatus.
   * Utilização de Bean Validations.
   * Tratamento de erros na API utilizando RestControllerAdvice e ExceptionHandler.
+* API REST com Kotlin e Spring Boot: Camada de persistência:
+  * Utilizando o mesmo projeto forum, foi implementada a parte de persistência da API.
+  * Configuração do Spring Data JPA.
+  * Mapeamento de entidades.
+  * Utilização de interface JpaRepository.
+  * Utilização de migrations com Flyway.
+  * Utilização de Cache.
+  * Filtros, paginação e ordenação.
+  * Montar queries personalizadas.
+  * Configuração para acesso de banco via console no Navegador.
+  * Acessar diretamente o EntityManager.
+* APIs com Kotlin e Spring Data REST:
+  * Abrir projeto spring-data-rest-example para verificar as anotações (README.md) e exemplos de implementação.
