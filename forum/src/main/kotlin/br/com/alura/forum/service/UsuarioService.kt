@@ -3,6 +3,8 @@ package br.com.alura.forum.service
 import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.model.Usuario
 import br.com.alura.forum.repository.UsuarioRepository
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -10,7 +12,7 @@ import java.util.*
 class UsuarioService(
     //private var usuarios: List<Usuario> // Retirado pois agora passamos a utilizar o banco H2 através do UsuarioRepository
     private val usuarioRepository: UsuarioRepository
-    ) {
+    ): UserDetailsService { //
 
     // Retirado pois agora passamos a utilizar o banco H2 através do UsuarioRepository
     /*init {
@@ -30,5 +32,12 @@ class UsuarioService(
         ).findFirst().orElseThrow { NotFoundException("Usuário não encontrado!") }*/
         return usuarioRepository.getOne(id)
     }
+
+    //Quando o nosso usuário passar as informações para a nossa aplicação, nós vamos fazer o hash da senha e, com o username, vamos buscar a informação no nosso banco de dados.
+    override fun loadUserByUsername(username: String?): UserDetails { // Toda requisição passará por aqui e verificará se o usuário existe no banco de dados para prosseguir:
+        val usuario = usuarioRepository.findByEmail(username).orElseThrow { NotFoundException("O Usuário ou Password informados não conferem!") }
+        return UserDetail(usuario)
+    }
+
 
 }

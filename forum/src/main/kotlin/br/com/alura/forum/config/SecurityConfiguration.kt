@@ -30,11 +30,11 @@ class SecurityConfiguration(
 
     // Pega as informações do usuário e passa pro método responsável que vai chamar o repository e validar se é um login valido:
     override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.userDetailsService(userDetailsService)?.passwordEncoder(bCryptPasswordEncoder())
+        auth?.userDetailsService(userDetailsService)?.passwordEncoder(bCryptPasswordEncoder()) // https://bcrypt-generator.com/
     }
 
     @Bean // Pra ser gerenciado pelo Spring.
-    private fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
