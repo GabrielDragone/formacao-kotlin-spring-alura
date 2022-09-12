@@ -18,7 +18,9 @@ class SecurityConfiguration(
 
     override fun configure(http: HttpSecurity?) {
         http?.
-        authorizeHttpRequests()?.   // Autorize as requisições
+        //authorizeHttpRequests()?.   // Autorize as requisições
+        authorizeRequests()?.   // Autorize as requisições
+        antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?. // Pra acessar tópicos é necessário da role LEITURA_ESCRITA
         anyRequest()?.              // Qualquer requisição
         authenticated()?.           // Precisa estar autenticada
         and()?.
