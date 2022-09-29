@@ -9,22 +9,26 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration // Pro framework gerenciar.
 @EnableWebSecurity // Vai habilitar a segurança na aplicação. O Spring vai olhar a configuração dela quando subir o projeto
 class SecurityConfiguration(
     private val userDetailsService: UserDetailsService
+    private val jwtUtil: JWTUtil
 ): WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
         http?.
         //authorizeHttpRequests()?.   // Autorize as requisições
         authorizeRequests()?.   // Autorize as requisições
-        antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?. // Pra acessar tópicos é necessário da role LEITURA_ESCRITA
+        //antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?. // Pra acessar tópicos é necessário da role LEITURA_ESCRITA
+        antMatchers("/login")?.permitAll()?.
         anyRequest()?.              // Qualquer requisição
         authenticated()?.           // Precisa estar autenticada
-        and()?.
-        sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?. // Não guarde o estado da autenticação
+        and()
+        http?.addFilterBefore(JWTLoginFilter(authManager = authenticationManager(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
+        http?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?. // Não guarde o estado da autenticação
         and()?.
         formLogin()?.disable()?. // Tela de Login desabilitado
         httpBasic()
