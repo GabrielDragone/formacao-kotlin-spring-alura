@@ -25,7 +25,7 @@ class SecurityConfiguration(
     override fun configure(http: HttpSecurity?) {
         http?.
         //authorizeHttpRequests()?.   // Autorize as requisições
-        csrf()?.disable()?. // O CSRF habilitado, faz com que um novo token seja gerado e validado do lado do cliente e navegador do mesmo evitando que outros usuarios consigam utilizar nossa autorização
+        //csrf()?.disable()?. // O CSRF habilitado, faz com que um novo token seja gerado e validado do lado do cliente e navegador do mesmo evitando que outros usuarios consigam utilizar nossa autorização
         authorizeRequests()?.   // Autorize as requisições
         antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?. // Pra acessar tópicos é necessário da role LEITURA_ESCRITA
         antMatchers(HttpMethod.POST,"/login")?.permitAll()?.

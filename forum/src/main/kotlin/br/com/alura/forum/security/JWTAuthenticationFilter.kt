@@ -29,7 +29,7 @@ class JWTAuthenticationFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilt
             jwt ->
             jwt?.startsWith("Bearer ") // Se o jwt começar com Bearer
             jwt?.substring(7, jwt.length) // Então pegar a partir da setima casa até o final e retornar
-        } ?: null
+        }
     }
 
 }
