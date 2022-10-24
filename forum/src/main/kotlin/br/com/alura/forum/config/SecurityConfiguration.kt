@@ -28,16 +28,16 @@ class SecurityConfiguration(
         //csrf()?.disable()?. // O CSRF habilitado, faz com que um novo token seja gerado e validado do lado do cliente e navegador do mesmo evitando que outros usuarios consigam utilizar nossa autorização
         authorizeRequests()?.   // Autorize as requisições
         antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?. // Pra acessar tópicos é necessário da role LEITURA_ESCRITA
-        antMatchers(HttpMethod.POST,"/login")?.permitAll()?.
+        //antMatchers(HttpMethod.POST,"/login")?.permitAll()?.
         anyRequest()?.              // Qualquer requisição
         authenticated()?.           // Precisa estar autenticada
-        and()
-        http?.addFilterBefore(JWTLoginFilter(authManager = authenticationManager(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
-        http?.addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), /*OncePerRequestFilter::class.java*/ UsernamePasswordAuthenticationFilter().javaClass) // Valida o token a cada requisição.
-        http?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//?. // Não guarde o estado da autenticação
-        //and()?.
-        //formLogin()?.disable()?. // Tela de Login desabilitado
-        //httpBasic()
+        and()?.
+        //http?.addFilterBefore(JWTLoginFilter(authManager = authenticationManager(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
+        //http?.addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass) // Valida o token a cada requisição.
+        /*http?.*/sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?. // Não guarde o estado da autenticação
+        and()?.
+        formLogin()?.disable()?. // Tela de Login desabilitado
+        httpBasic()
     }
 
     // Pega as informações do usuário e passa pro método responsável que vai chamar o repository e validar se é um login valido:

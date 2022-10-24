@@ -8,6 +8,6 @@ import java.util.*
 interface UsuarioRepository: JpaRepository<Usuario, Long> {
 
     // Não precisamos criar uma query nativa, a JPA faz: select * from usuario where email = username
-    fun findByEmail(username: String?): Optional<Usuario>
+    fun findByEmail(username: String?): Usuario? // ? Pode ou não retornar um usuario
 
 }

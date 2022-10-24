@@ -1,3 +1,3 @@
 UPDATE usuario
-SET password = '$2a$12$h8KYvlpbG0wdpqawZKV3CeEXqloBj5pZ/wnmn6WdT90yWmvFbG67q'
-WHERE id = 1
+SET password = '$2a$12$EPX4LLhQYiXmaz4BAYisXu7v0j6vXu0DMPXWSdiyDm5kSqwbJ7GEm'
+WHERE id = 1;

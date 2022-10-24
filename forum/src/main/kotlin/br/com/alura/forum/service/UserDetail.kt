@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class UserDetail(private val usuario: Usuario): UserDetails {
 
-    override fun getAuthorities() = usuario.role
+    override fun getAuthorities() = usuario.role // Quando só temos um retorno, podemos resumir com o =
 
     // https://bcrypt-generator.com/
     override fun getPassword() = usuario.password

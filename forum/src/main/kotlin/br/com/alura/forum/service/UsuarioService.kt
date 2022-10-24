@@ -35,9 +35,9 @@ class UsuarioService(
 
     //Quando o nosso usuário passar as informações para a nossa aplicação, nós vamos fazer o hash da senha e, com o username, vamos buscar a informação no nosso banco de dados.
     override fun loadUserByUsername(username: String?): UserDetails { // Toda requisição passará por aqui e verificará se o usuário existe no banco de dados para prosseguir:
-        val usuario = usuarioRepository.findByEmail(username).orElseThrow { NotFoundException("O Usuário ou Password informados não conferem!") }
+//        val usuario = usuarioRepository.findByEmail(username).orElseThrow { NotFoundException("O Usuário ou Password informados não conferem!") }
+        val usuario = usuarioRepository.findByEmail(username) ?: throw RuntimeException()
         return UserDetail(usuario)
     }
-
 
 }
